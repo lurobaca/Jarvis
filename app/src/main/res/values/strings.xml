@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Jarvis</string>
+    <string name="status_stopped">Detenido</string>
+    <string name="activate_jarvis">Activar Jarvis</string>
+    <string name="stop_jarvis">Detener Jarvis</string>
+    <string name="setup_hint">Selecciona ChatGPT en Android: Ajustes → Aplicaciones → Aplicaciones predeterminadas → Asistente digital.</string>
+</resources>
