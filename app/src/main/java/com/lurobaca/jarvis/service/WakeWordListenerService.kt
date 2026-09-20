@@ -10,9 +10,9 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import com.lurobaca.jarvis.BuildConfig
 import com.lurobaca.jarvis.MainActivity
 import com.lurobaca.jarvis.R
+import com.lurobaca.jarvis.data.PicovoiceAccessKeyStore
 import com.lurobaca.jarvis.domain.WakeWordGate
 import com.lurobaca.jarvis.launcher.AndroidChatGptLauncher
 import com.lurobaca.jarvis.speech.AndroidAssistantVoiceService
@@ -29,7 +29,7 @@ class WakeWordListenerService : Service() {
         createChannel()
         startAsForeground()
         voice = AndroidAssistantVoiceService(this)
-        wakeWordEngine = PorcupineWakeWordEngine(this, BuildConfig.PICOVOICE_ACCESS_KEY)
+        wakeWordEngine = PorcupineWakeWordEngine(this, PicovoiceAccessKeyStore(this).get())
         wakeWordEngine.start(::onWakeWordDetected) { showError(it.message ?: "Error de escucha") }
     }
 
