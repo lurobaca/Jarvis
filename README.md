@@ -10,7 +10,7 @@ Versión inicial `0.1.0`. Requiere validación en un teléfono Android real. And
 
 - La detección se ejecuta localmente con Porcupine.
 - La aplicación no almacena grabaciones.
-- La clave de Picovoice permanece en `local.properties` y no se sube a Git.
+- La clave de Picovoice se guarda solamente en las preferencias privadas del teléfono y no se sube a Git.
 - La voz de confirmación es una voz TTS instalada en Android. No clona ni imita a Paul Bettany.
 
 ## Requisitos
@@ -24,12 +24,11 @@ Versión inicial `0.1.0`. Requiere validación en un teléfono Android real. And
 ## Configuración
 
 1. Clona el repositorio.
-2. Copia `local.properties.example` como `local.properties`.
-3. Ajusta `sdk.dir`.
-4. Agrega `PICOVOICE_ACCESS_KEY`.
-5. Abre el proyecto en Android Studio y ejecuta `app`.
-6. En ChatGPT, selecciona `Settings → Voice → Advanced` y activa `Start with Voice`.
-7. Abre Jarvis, concede micrófono/notificaciones y pulsa **Activar Jarvis**.
+2. Copia `local.properties.example` como `local.properties` y ajusta `sdk.dir`.
+3. Abre el proyecto en Android Studio y ejecuta `app`.
+4. En ChatGPT, selecciona `Settings → Voice → Advanced` y activa `Start with Voice`.
+5. Abre Jarvis, pega tu AccessKey de Picovoice y pulsa **Guardar AccessKey**.
+6. Concede micrófono/notificaciones y pulsa **Activar Jarvis**.
 
 ## Flujo
 
