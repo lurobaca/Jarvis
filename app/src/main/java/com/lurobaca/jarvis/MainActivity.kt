@@ -11,18 +11,14 @@ import android.provider.Settings
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.lurobaca.jarvis.data.PicovoiceAccessKeyStore
 import com.lurobaca.jarvis.service.WakeWordListenerService
 
 class MainActivity : Activity() {
     private lateinit var status: TextView
-    private lateinit var accessKey: EditText
-    private val accessKeyStore by lazy { PicovoiceAccessKeyStore(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,19 +48,6 @@ class MainActivity : Activity() {
         }
         addView(status, matchWrap())
 
-        accessKey = EditText(context).apply {
-            hint = "Picovoice AccessKey"
-            setText(accessKeyStore.get())
-            setTextColor(Color.WHITE)
-            setHintTextColor(Color.GRAY)
-            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
-        }
-        addView(accessKey, matchWrap())
-        addView(actionButton("Guardar AccessKey") {
-            accessKeyStore.save(accessKey.text.toString())
-            status.text = if (accessKeyStore.get().isBlank()) "AccessKey vacía" else "AccessKey guardada solamente en este teléfono"
-        }, matchWrap())
-
         addView(actionButton("Activar Jarvis") { activate() }, matchWrap())
         addView(actionButton("Detener Jarvis") { stopJarvis() }, matchWrap())
         addView(actionButton("Abrir ChatGPT") { openChatGpt() }, matchWrap())
@@ -79,10 +62,6 @@ class MainActivity : Activity() {
     }
 
     private fun activate() {
-        if (accessKeyStore.get().isBlank()) {
-            status.text = "Escribe y guarda tu Picovoice AccessKey"
-            return
-        }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_MICROPHONE)
             return

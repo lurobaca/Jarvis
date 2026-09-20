@@ -8,9 +8,9 @@ Versión inicial `0.1.0`. Requiere validación en un teléfono Android real. And
 
 ## Privacidad
 
-- La detección se ejecuta localmente con Porcupine.
+- La detección se ejecuta localmente con Vosk.
 - La aplicación no almacena grabaciones.
-- La clave de Picovoice se guarda solamente en las preferencias privadas del teléfono y no se sube a Git.
+- No requiere una cuenta, una clave externa ni conexión a Internet para escuchar.
 - La voz de confirmación es una voz TTS instalada en Android. No clona ni imita a Paul Bettany.
 
 ## Requisitos
@@ -19,7 +19,6 @@ Versión inicial `0.1.0`. Requiere validación en un teléfono Android real. And
 - Android SDK 35.
 - Android 8.0/API 26 o posterior.
 - ChatGPT para Android instalado.
-- Cuenta y AccessKey de [Picovoice Console](https://console.picovoice.ai/).
 
 ## Configuración
 
@@ -27,13 +26,12 @@ Versión inicial `0.1.0`. Requiere validación en un teléfono Android real. And
 2. Copia `local.properties.example` como `local.properties` y ajusta `sdk.dir`.
 3. Abre el proyecto en Android Studio y ejecuta `app`.
 4. En ChatGPT, selecciona `Settings → Voice → Advanced` y activa `Start with Voice`.
-5. Abre Jarvis, pega tu AccessKey de Picovoice y pulsa **Guardar AccessKey**.
-6. Concede micrófono/notificaciones y pulsa **Activar Jarvis**.
+5. Abre Jarvis, concede micrófono/notificaciones y pulsa **Activar Jarvis**.
 
 ## Flujo
 
 1. Un servicio visible escucha la palabra “Jarvis”.
-2. Porcupine procesa el audio localmente.
+2. Vosk procesa el audio localmente con un modelo incluido en el APK.
 3. Un control de tres segundos evita activaciones duplicadas.
 4. Android TTS dice “Sí, señor”.
 5. Al finalizar, se abre ChatGPT.
@@ -41,7 +39,7 @@ Versión inicial `0.1.0`. Requiere validación en un teléfono Android real. And
 ## Estructura
 
 - `domain`: reglas puras y estados.
-- `wakeword`: abstracción y adaptador de Porcupine.
+- `wakeword`: abstracción y adaptador de Vosk.
 - `speech`: confirmación mediante Android TTS.
 - `launcher`: apertura segura de ChatGPT.
 - `service`: coordinación del servicio de micrófono.
@@ -53,7 +51,7 @@ Consulta [Arquitectura](docs/ARCHITECTURE.md), [Instalación](docs/INSTALLATION.
 - ChatGPT no publica un Intent para seleccionar Advanced Voice desde otra aplicación. El usuario debe configurarlo una vez.
 - `Start with Voice` depende de que ChatGPT abra una conversación nueva o vacía.
 - Android puede restringir la apertura automática de actividades desde segundo plano.
-- Porcupine necesita una AccessKey, aunque la detección de la palabra se realiza localmente.
+- El APK es más grande porque incluye el modelo de reconocimiento sin conexión.
 - Las voces TTS instaladas cambian según el fabricante del teléfono.
 
 ## Licencia

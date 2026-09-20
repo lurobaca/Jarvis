@@ -1,13 +1,8 @@
-import java.util.Properties
+import java.net.URI
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-}
-
-val localProperties = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if (file.exists()) file.inputStream().use(::load)
 }
 
 android {
@@ -18,13 +13,10 @@ android {
         applicationId = "com.lurobaca.jarvis"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "PICOVOICE_ACCESS_KEY", "\"${localProperties.getProperty("PICOVOICE_ACCESS_KEY", "")}\"")
     }
-
-    buildFeatures { buildConfig = true }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -34,8 +26,36 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
-    implementation("ai.picovoice:porcupine-android:4.0.2")
+    implementation("com.alphacephei:vosk-android:0.3.47")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 }
+
+val voskModelDirectory = layout.projectDirectory.dir("src/main/assets/model-en-us")
+val downloadVoskModel by tasks.registering {
+    description = "Downloads the offline English Vosk model bundled in the APK"
+    outputs.dir(voskModelDirectory)
+
+    doLast {
+        val destination = voskModelDirectory.asFile
+        if (destination.resolve("am/final.mdl").exists()) return@doLast
+
+        val archive = layout.buildDirectory.file("downloads/vosk-model-small-en-us-0.15.zip").get().asFile
+        archive.parentFile.mkdirs()
+        URI("https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip")
+            .toURL()
+            .openStream()
+            .use { input -> archive.outputStream().use(input::copyTo) }
+
+        copy {
+            from(zipTree(archive))
+            into(destination)
+            includeEmptyDirs = false
+            eachFile { path = path.substringAfter('/') }
+        }
+        destination.resolve("uuid").writeText("jarvis-vosk-en-us-0.15")
+    }
+}
+
+tasks.named("preBuild").configure { dependsOn(downloadVoskModel) }

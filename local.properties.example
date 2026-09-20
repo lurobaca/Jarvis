@@ -1,3 +1,2 @@
 # Copy this file to local.properties and keep it out of Git.
 sdk.dir=/absolute/path/to/Android/Sdk
-PICOVOICE_ACCESS_KEY=your_picovoice_access_key
