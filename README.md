@@ -34,7 +34,7 @@ Versión inicial `0.1.0`. Requiere validación en un teléfono Android real. And
 2. Vosk procesa el audio localmente con un modelo incluido en el APK.
 3. Un control de tres segundos evita activaciones duplicadas.
 4. Android TTS usa una voz masculina en español, cuando el motor instalado la ofrece, y dice “Sí, señor. ¿Qué necesita?”.
-5. Al finalizar, se abre ChatGPT.
+5. Al finalizar, Android invoca el asistente digital predeterminado.
 
 ## Estructura
 
@@ -49,7 +49,7 @@ Consulta [Arquitectura](docs/ARCHITECTURE.md), [Instalación](docs/INSTALLATION.
 ## Limitaciones
 
 - ChatGPT no publica un Intent para seleccionar Advanced Voice desde otra aplicación. El usuario debe configurarlo una vez.
-- La apertura directa del modo de voz depende de tener activado `Start with Voice` en ChatGPT.
+- Para usar ChatGPT, debe estar disponible y seleccionado como asistente digital predeterminado de Android; si el fabricante no lo ofrece, Android abrirá el asistente disponible.
 - `Start with Voice` depende de que ChatGPT abra una conversación nueva o vacía.
 - Android puede restringir la apertura automática de actividades desde segundo plano.
 - El APK es más grande porque incluye el modelo de reconocimiento sin conexión.

@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
@@ -16,6 +15,7 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.lurobaca.jarvis.service.WakeWordListenerService
+import com.lurobaca.jarvis.launcher.AndroidChatGptLauncher
 
 class MainActivity : Activity() {
     private lateinit var status: TextView
@@ -50,7 +50,7 @@ class MainActivity : Activity() {
 
         addView(actionButton("Activar Jarvis") { activate() }, matchWrap())
         addView(actionButton("Detener Jarvis") { stopJarvis() }, matchWrap())
-        addView(actionButton("Abrir ChatGPT") { openChatGpt() }, matchWrap())
+        addView(actionButton("Abrir asistente predeterminado") { openAssistant() }, matchWrap())
 
         addView(TextView(context).apply {
             text = getString(R.string.setup_hint)
@@ -75,9 +75,9 @@ class MainActivity : Activity() {
         status.text = "Estado: detenido"
     }
 
-    private fun openChatGpt() {
-        packageManager.getLaunchIntentForPackage("com.openai.chatgpt")?.let(::startActivity)
-            ?: startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+    private fun openAssistant() {
+        val opened = AndroidChatGptLauncher(this).openVoice()
+        status.text = if (opened) "Asistente solicitado" else "No se encontró un asistente predeterminado"
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, results: IntArray) {

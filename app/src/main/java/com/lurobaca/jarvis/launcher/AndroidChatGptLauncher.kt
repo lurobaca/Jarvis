@@ -6,14 +6,19 @@ import android.net.Uri
 
 class AndroidChatGptLauncher(private val context: Context) : ChatGptLauncher {
     override fun openVoice(): Boolean {
-        val packageIntent = context.packageManager.getLaunchIntentForPackage(CHATGPT_PACKAGE)
-        val intent = packageIntent ?: Intent(Intent.ACTION_VIEW, Uri.parse(CHATGPT_WEB))
-        intent.addFlags(
-            Intent.FLAG_ACTIVITY_NEW_TASK or
-                Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                Intent.FLAG_ACTIVITY_SINGLE_TOP,
+        val assistantIntents = listOf(
+            Intent(Intent.ACTION_VOICE_COMMAND),
+            Intent(Intent.ACTION_ASSIST),
         )
-        return runCatching { context.startActivity(intent); true }.getOrDefault(false)
+        assistantIntents.forEach { intent ->
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            if (runCatching { context.startActivity(intent); true }.getOrDefault(false)) return true
+        }
+
+        val fallback = context.packageManager.getLaunchIntentForPackage(CHATGPT_PACKAGE)
+            ?: Intent(Intent.ACTION_VIEW, Uri.parse(CHATGPT_WEB))
+        fallback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        return runCatching { context.startActivity(fallback); true }.getOrDefault(false)
     }
 
     private companion object {
