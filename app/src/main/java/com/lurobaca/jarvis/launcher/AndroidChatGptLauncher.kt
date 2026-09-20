@@ -8,7 +8,11 @@ class AndroidChatGptLauncher(private val context: Context) : ChatGptLauncher {
     override fun openVoice(): Boolean {
         val packageIntent = context.packageManager.getLaunchIntentForPackage(CHATGPT_PACKAGE)
         val intent = packageIntent ?: Intent(Intent.ACTION_VIEW, Uri.parse(CHATGPT_WEB))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP,
+        )
         return runCatching { context.startActivity(intent); true }.getOrDefault(false)
     }
 
